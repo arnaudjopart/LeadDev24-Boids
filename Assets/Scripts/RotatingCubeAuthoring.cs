@@ -14,6 +14,11 @@ public class RotatingCubeAuthoring : MonoBehaviour
             {
                 Value = authoring.m_rotatingSpeed
             });
+
+            AddComponent(currentEntity, new SpeedComponentData
+            {
+                Value = 5
+            }) ;
         }
     }
 }

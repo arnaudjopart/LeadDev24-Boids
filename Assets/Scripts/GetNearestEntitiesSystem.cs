@@ -19,14 +19,16 @@ public partial class GetNearestEntitiesSystem : SystemBase
     }
     protected override void OnUpdate()
     {
-        var transforms = m_query.ToComponentDataArray<LocalTransform>(Allocator.Temp);
+        var otherBoids = m_query.ToEntityArray(Allocator.Temp);
 
-        foreach (var aspect in SystemAPI.Query<BoidAspect>())
+        foreach (var (aspect,entity) in SystemAPI.Query<BoidAspect>().WithEntityAccess())
         {
             aspect.Clear();
             Debug.Log(aspect.m_boid.ValueRO.m_detectionDistance);
-            foreach (var transform in transforms)
+            foreach (var neighbor in otherBoids)
             {
+                if (entity == neighbor) continue;
+                var transform = EntityManager.GetComponentData<LocalTransform>(neighbor);
                 if (math.distancesq(aspect.GetPosition(), transform.Position) < aspect.m_boid.ValueRO.m_detectionDistance * aspect.m_boid.ValueRO.m_detectionDistance)
                 {
                     aspect.AddToNeighborList(transform.Position);
