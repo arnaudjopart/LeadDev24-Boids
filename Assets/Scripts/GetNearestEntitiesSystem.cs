@@ -4,7 +4,7 @@ using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
-using UnityEngine;
+
 
 public partial class GetNearestEntitiesSystem : SystemBase
 {
@@ -31,7 +31,7 @@ public partial class GetNearestEntitiesSystem : SystemBase
                 var transform = EntityManager.GetComponentData<LocalTransform>(neighbor);
                 if (math.distancesq(aspect.GetPosition(), transform.Position) < aspect.m_boid.ValueRO.m_detectionDistance * aspect.m_boid.ValueRO.m_detectionDistance)
                 {
-                    aspect.AddToNeighborList(transform.Position);
+                    aspect.AddToNeighborList(transform.Position, transform.Forward());
                 }
             }
         }

@@ -8,7 +8,7 @@ public partial class DrawNearestNeighborsManager : SystemBase
 {
     protected override void OnUpdate()
     {
-        foreach (var (buffer, localTransform) in SystemAPI.Query<DynamicBuffer<NeighborsTransformBufferElement>,RefRO<LocalTransform>>())
+        foreach (var (buffer, localTransform) in SystemAPI.Query<DynamicBuffer<NeighborsTransformBufferElement>, RefRO<LocalTransform>>().WithAll<DemoTag>())
         {
             foreach(var neighbour in buffer)
             {
@@ -18,4 +18,9 @@ public partial class DrawNearestNeighborsManager : SystemBase
     }
 
    
+}
+
+struct DemoTag : IComponentData
+{
+
 }

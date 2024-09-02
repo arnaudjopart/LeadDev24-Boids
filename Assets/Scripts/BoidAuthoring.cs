@@ -35,7 +35,7 @@ public struct NeighborsTransformBufferElement : IBufferElementData
 
 public readonly partial struct BoidAspect : IAspect
 {
-    readonly RefRW<LocalTransform> m_transform;
+    public readonly RefRW<LocalTransform> m_transform;
     public readonly RefRW<Boid> m_boid;
     public readonly DynamicBuffer<NeighborsTransformBufferElement> m_neighbors;
 
@@ -49,11 +49,12 @@ public readonly partial struct BoidAspect : IAspect
         m_neighbors.Clear();
     }
 
-    internal void AddToNeighborList(float3 position)
+    internal void AddToNeighborList(float3 position, float3 forward)
     {
         m_neighbors.Add(new NeighborsTransformBufferElement
         {
-            Position = position
+            Position = position,
+            Forward = forward
         });
     }
 }
