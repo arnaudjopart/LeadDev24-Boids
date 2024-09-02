@@ -27,7 +27,6 @@ public partial class GetNearestEntitiesSystem : SystemBase
         foreach (var (aspect, boid) in SystemAPI.Query<BoidAspect>().WithEntityAccess())
         {
             aspect.Clear();
-            Debug.Log(aspect.m_boid.ValueRO.m_detectionDistance);
             foreach (var entity in entities)
             {
                 if (entity == boid) continue;
