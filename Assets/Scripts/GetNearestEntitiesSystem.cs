@@ -1,23 +1,25 @@
 
 
+using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 
 
-public partial class GetNearestEntitiesSystem : SystemBase
+public partial struct GetNearestEntitiesSystem : ISystem
 {
     private EntityQuery m_query;
 
-    protected override void OnCreate()
+    public void OnCreate(ref SystemState state)
     {
         m_query = new EntityQueryBuilder(Allocator.Temp)
             .WithAll<LocalTransform>()
             .WithAll<Boid>()
-            .Build(this);
+            .Build(ref state);
     }
-    protected override void OnUpdate()
+    [BurstCompile]
+    public void OnUpdate(ref SystemState state)
     {
         var otherBoids = m_query.ToEntityArray(Allocator.Temp);
 
@@ -28,8 +30,8 @@ public partial class GetNearestEntitiesSystem : SystemBase
             foreach (var neighbor in otherBoids)
             {
                 if (entity == neighbor) continue;
-                var transform = EntityManager.GetComponentData<LocalTransform>(neighbor);
-                if (math.distancesq(aspect.GetPosition(), transform.Position) < aspect.m_boid.ValueRO.m_detectionDistance * aspect.m_boid.ValueRO.m_detectionDistance)
+                var transform = state.EntityManager.GetComponentData<LocalTransform>(neighbor);
+                if (math.distancesq(aspect.GetPosition(), transform.Position) < math.pow(aspect.m_boid.ValueRO.m_detectionDistance,2))
                 {
                     aspect.AddToNeighborList(transform.Position, transform.Forward());
                 }
@@ -39,8 +41,6 @@ public partial class GetNearestEntitiesSystem : SystemBase
 
         
     }
-
-   protected override void OnDestroy() { }
 }
 
 
